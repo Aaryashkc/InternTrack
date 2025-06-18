@@ -87,8 +87,7 @@ export default function SignUp() {
       })
 
       if (response.status === 201) {
-        // Store user data and token in localStorage
-        localStorage.setItem('user', JSON.stringify(response.data.user))
+        // Store only the JWT token
         localStorage.setItem('token', response.data.token)
         // Redirect to main page
         router.push('/')

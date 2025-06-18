@@ -77,8 +77,7 @@ export default function Login() {
       const data = await response.json()
 
       if (response.ok) {
-        // Store user data and token in localStorage
-        localStorage.setItem('user', JSON.stringify(data.user))
+        // Store only the JWT token
         localStorage.setItem('token', data.token)
         // Redirect to main page
         router.push('/')
