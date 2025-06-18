@@ -2,6 +2,7 @@
 
 import axios from 'axios'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface FormData {
   name: string
@@ -18,6 +19,7 @@ interface FormErrors {
 }
 
 export default function SignUp() {
+  const router = useRouter()
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -84,14 +86,12 @@ export default function SignUp() {
         password: formData.password
       })
 
-      if (response.status === 200) {
-        alert('Sign up successful!')
-         setFormData({
-          name: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
-        })
+      if (response.status === 201) {
+        // Store user data and token in localStorage
+        localStorage.setItem('user', JSON.stringify(response.data.user))
+        localStorage.setItem('token', response.data.token)
+        // Redirect to main page
+        router.push('/')
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

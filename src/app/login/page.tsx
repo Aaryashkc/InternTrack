@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 interface FormData {
   email: string
@@ -13,13 +14,13 @@ interface FormErrors {
 }
 
 export default function Login() {
+  const router = useRouter()
   const [formData, setFormData] = useState<FormData>({
     email: '',
     password: ''
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [rememberMe, setRememberMe] = useState<boolean>(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -62,7 +63,6 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      // TODO: Replace with actual API call to your backend
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -71,19 +71,19 @@ export default function Login() {
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
-          rememberMe
         })
       })
 
+      const data = await response.json()
+
       if (response.ok) {
-        const data = await response.json()
-        // TODO: Handle successful login (store token, redirect, etc.)
-        alert('Login successful!')
-        // Example: router.push('/dashboard')
-        console.log('Login data:', data)
+        // Store user data and token in localStorage
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
+        // Redirect to main page
+        router.push('/')
       } else {
-        const errorData = await response.json()
-        alert(errorData.message || 'Login failed')
+        alert(data.message || 'Login failed')
       }
     } catch (error) {
       console.error('Login error:', error)
@@ -149,19 +149,6 @@ export default function Login() {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                Remember me
-              </label>
-            </div>
 
             <div className="text-sm">
               <a href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">

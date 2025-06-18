@@ -5,26 +5,28 @@ import { generateToken } from '@/lib/jwt';
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const { email, password } = await req.json();
 
     // Connect to MongoDB
     await connectDB();
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
+    // Find user by email
+    const user = await User.findOne({ email });
+    if (!user) {
       return NextResponse.json(
-        { message: 'User already exists' },
-        { status: 400 }
+        { message: 'Invalid email or password' },
+        { status: 401 }
       );
     }
 
-    // Create new user
-    const user = await User.create({
-      name,
-      email,
-      password
-    });
+    // Compare password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return NextResponse.json(
+        { message: 'Invalid email or password' },
+        { status: 401 }
+      );
+    }
 
     // Generate JWT token
     const token = generateToken(user._id.toString());
@@ -38,15 +40,15 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { 
-        message: 'User created successfully',
+        message: 'Login successful',
         user: userWithoutPassword,
         token
       },
-      { status: 201 }
+      { status: 200 }
     );
 
   } catch (error: any) {
-    console.error('Signup error:', error);
+    console.error('Login error:', error);
     return NextResponse.json(
       { message: error.message || 'Something went wrong' },
       { status: 500 }
