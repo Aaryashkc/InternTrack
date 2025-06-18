@@ -1,5 +1,6 @@
 'use client'
 
+import axios from 'axios'
 import { useState } from 'react'
 
 interface FormData {
@@ -76,38 +77,29 @@ export default function SignUp() {
 
     setIsLoading(true)
 
-    try {
-      // TODO: Replace with actual API call to your backend
-      // Example: await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify(formData) })
-      
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password
-        })
+    try {      
+      const response = await axios.post('/api/auth/signup', {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
       })
 
-      if (response.ok) {
+      if (response.status === 200) {
         alert('Sign up successful!')
-        // Reset form
-        setFormData({
+         setFormData({
           name: '',
           email: '',
           password: '',
           confirmPassword: ''
         })
-      } else {
-        const errorData = await response.json()
-        alert(errorData.message || 'Sign up failed')
       }
     } catch (error) {
-      console.error('Sign up error:', error)
-      alert('Sign up failed. Please try again.')
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || 'Sign up failed')
+      } else {
+        console.error('Sign up error:', error)
+        alert('Sign up failed. Please try again.')
+      }
     } finally {
       setIsLoading(false)
     }
