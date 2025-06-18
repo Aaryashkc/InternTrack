@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Internship crm",
+  title: "InternTrack",
   description: "softech internship crm application for managing interns and interviews",
 };
 
