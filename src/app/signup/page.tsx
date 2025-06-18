@@ -114,13 +114,13 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
+          <h2 className="text-center text-3xl font-bold text-gray-200">
             Create Account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-200">
             Sign up to get started
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function SignUp() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-300">
                 Full Name
               </label>
               <input
@@ -148,7 +148,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                 Email
               </label>
               <input
@@ -168,7 +168,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                 Password
               </label>
               <input
@@ -188,7 +188,7 @@ export default function SignUp() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
                 Confirm Password
               </label>
               <input
@@ -221,7 +221,7 @@ export default function SignUp() {
           </button>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-300">
               Already have an account?{' '}
               <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
                 Sign in
