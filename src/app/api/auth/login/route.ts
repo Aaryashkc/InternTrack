@@ -1,48 +1,21 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { User } from '@/models/User';
-import { generateToken } from '@/lib/jwt';
+import { loginController } from '@/controllers/authController';
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json();
-
+    const credentials = await req.json();
+    
     // Connect to MongoDB
     await connectDB();
 
-    // Find user by email
-    const user = await User.findOne({ email });
-    if (!user) {
-      return NextResponse.json(
-        { message: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-
-    // Compare password
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return NextResponse.json(
-        { message: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-
-    // Generate JWT token
-    const token = generateToken(user._id.toString());
-
-    // Remove password from response
-    const userWithoutPassword = {
-      _id: user._id,
-      name: user.name,
-      email: user.email
-    };
+    const result = await loginController(credentials);
 
     return NextResponse.json(
       { 
         message: 'Login successful',
-        user: userWithoutPassword,
-        token
+        user: result.user,
+        token: result.token
       },
       { status: 200 }
     );
@@ -51,7 +24,7 @@ export async function POST(req: Request) {
     console.error('Login error:', error);
     return NextResponse.json(
       { message: error.message || 'Something went wrong' },
-      { status: 500 }
+      { status: error.message === 'Invalid email or password' ? 401 : 500 }
     );
   }
 } 
